@@ -190,7 +190,7 @@ const BASE_F  = new Set(['2026-03-23','2026-03-24','2026-04-02','2026-04-03',
 
 const MATS = [
   {id:'adm', name:'Derecho Administrativo',       short:'D. Administrativo',
-   hs:[{d:1,i:'15:00',f:'18:10'},{d:3,i:'15:00',f:'17:05'},{d:4,i:'15:00',f:'16:00'},{d:5,i:'15:00',f:'16:00'}]},
+   hs:[{d:1,i:'18:15',f:'20:20'},{d:3,i:'15:00',f:'17:05'},{d:4,i:'15:00',f:'16:00'},{d:5,i:'15:00',f:'16:00'}]},
   {id:'min', name:'Derecho Minero y Agrario',      short:'D. Minero',
    hs:[{d:2,i:'18:15',f:'20:20'},{d:4,i:'16:05',f:'17:05'}]},
   {id:'prv', name:'Derecho Privado Profundizado',  short:'D. Privado',
@@ -445,7 +445,6 @@ function renderModal(){
   const rm=new Set(removed(mid));
   const ex=extras(mid);
 
-  // Build base class list
   const base=[];
   let d=new Date(S_START);
   while(d<=S_END){
@@ -457,9 +456,37 @@ function renderModal(){
   const active=base.filter(x=>!x.rm);
   const cancelled=base.filter(x=>x.rm);
 
+  const dOpts=n=>[1,2,3,4,5,6].map(v=>`<option value="${v}"${v===n?' selected':''}>${DNAMES[v]}</option>`).join('');
+
+  // Horario rows
+  let hrRows=m.hs.map((h,i)=>`
+    <div class="modal-row" style="background:var(--surface2);padding:6px 10px;border-radius:var(--r)">
+      <select class="input-sm" id="hr-d-${i}" style="width:108px">${dOpts(h.d)}</select>
+      <input type="time" class="input-sm" id="hr-i-${i}" value="${h.i}" style="width:86px">
+      <span style="font-size:12px;color:var(--text3)">–</span>
+      <input type="time" class="input-sm" id="hr-f-${i}" value="${h.f}" style="width:86px">
+      <button class="icon-btn" onclick="doDelHorario('${mid}',${i})">✕</button>
+    </div>`).join('');
+
   let html=`
   <div class="modal-sec">
-    <div class="modal-sec-title">Agregar clase extra</div>
+    <div class="modal-sec-title">Horarios regulares</div>
+    <div id="hr-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px">${hrRows}</div>
+    <div style="background:var(--surface2);padding:6px 10px;border-radius:var(--r)">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:600">Agregar día</div>
+      <div class="modal-row" style="margin-bottom:6px">
+        <select class="input-sm" id="new-hr-d" style="width:108px">${dOpts(1)}</select>
+        <input type="time" class="input-sm" id="new-hr-i" value="15:00" style="width:86px">
+        <span style="font-size:12px;color:var(--text3)">–</span>
+        <input type="time" class="input-sm" id="new-hr-f" value="17:00" style="width:86px">
+      </div>
+      <button class="btn" onclick="doAddHorario('${mid}')" style="width:100%;margin-bottom:4px">+ Agregar día</button>
+    </div>
+    <button class="btn btn-primary" onclick="doSaveHorarios('${mid}')" style="width:100%;margin-top:8px">Guardar horarios</button>
+  </div>
+
+  <div class="modal-sec">
+    <div class="modal-sec-title">Agregar clase extra puntual</div>
     <div class="modal-row">
       <label>Fecha</label>
       <input type="date" class="input-sm" id="ex-date" min="2026-03-16" max="2026-07-03">
@@ -474,7 +501,7 @@ function renderModal(){
   </div>`;
 
   if(ex.length){
-    html+=`<div class="modal-sec"><div class="modal-sec-title">Clases extra</div><div class="scrollable">`;
+    html+=`<div class="modal-sec"><div class="modal-sec-title">Clases extra puntuales</div><div class="scrollable">`;
     ex.forEach(e=>{
       const dt=fromIso(e.date);
       html+=`<div class="list-item"><span>${fmt(dt)} ${DNAMES[dt.getDay()]} <span class="chip">extra</span> ${e.i}–${e.f}</span><button class="icon-btn" onclick="doDelExtra('${mid}','${e.date}')">✕</button></div>`;
@@ -504,6 +531,41 @@ function renderModal(){
   }
 
   document.getElementById('m-body').innerHTML=html;
+}
+
+function doSaveHorarios(mid){
+  const m=MATS.find(x=>x.id===mid);
+  const newHs=[];
+  m.hs.forEach((_,i)=>{
+    const dEl=document.getElementById('hr-d-'+i);
+    const iEl=document.getElementById('hr-i-'+i);
+    const fEl=document.getElementById('hr-f-'+i);
+    if(dEl&&iEl&&fEl) newHs.push({d:parseInt(dEl.value),i:iEl.value,f:fEl.value});
+  });
+  if(newHs.length===0){alert('La materia debe tener al menos un horario.');return;}
+  m.hs=newHs;
+  // clear removed/extras since schedule changed
+  renderModal();
+  render();
+  alert('Horarios guardados. Los cambios se ven reflejados en el calendario.');
+}
+
+function doAddHorario(mid){
+  const m=MATS.find(x=>x.id===mid);
+  const d=parseInt(document.getElementById('new-hr-d').value);
+  const i=document.getElementById('new-hr-i').value;
+  const f=document.getElementById('new-hr-f').value;
+  if(m.hs.find(h=>h.d===d)){alert('Ya existe un horario para ese día. Editalo en la lista de arriba.');return;}
+  m.hs.push({d,i,f});
+  m.hs.sort((a,b)=>a.d-b.d);
+  renderModal();
+}
+
+function doDelHorario(mid,idx){
+  const m=MATS.find(x=>x.id===mid);
+  if(m.hs.length<=1){alert('La materia debe tener al menos un horario.');return;}
+  m.hs.splice(idx,1);
+  renderModal();
 }
 
 function doAdd(mid){
