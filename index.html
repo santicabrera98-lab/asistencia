@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asistencia UCH 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --border: rgba(0,0,0,0.09);
+  --border-md: rgba(0,0,0,0.16);
+  --text: #1a1917;
+  --text2: #6b6860;
+  --text3: #a09e99;
+  --accent: #c0392b;
+  --green: #2e7d32;
+  --green-bg: #edf7ee;
+  --amber: #b45309;
+  --amber-bg: #fef3e2;
+  --red: #c62828;
+  --red-bg: #fdecea;
+  --blue: #1565c0;
+  --blue-bg: #e3f0fb;
+  --r: 10px;
+  --rlg: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161614;
+    --surface: #1e1e1b;
+    --surface2: #272724;
+    --border: rgba(255,255,255,0.08);
+    --border-md: rgba(255,255,255,0.15);
+    --text: #f0ede8;
+    --text2: #9e9c97;
+    --text3: #5e5c58;
+    --accent: #e05545;
+    --green: #66bb6a;
+    --green-bg: #1a2e1b;
+    --amber: #ffb74d;
+    --amber-bg: #2a2010;
+    --red: #ef5350;
+    --red-bg: #2a1515;
+    --blue: #64b5f6;
+    --blue-bg: #0d2137;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:200;}
+.topbar-brand{display:flex;align-items:center;gap:10px;}
+.topbar-logo{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white;font-family:'DM Mono',monospace;}
+.topbar-title{font-size:15px;font-weight:600;}
+.topbar-sub{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.container{max-width:880px;margin:0 auto;padding:2rem 1.25rem;}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:2rem;}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.125rem;}
+.metric-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.metric-value{font-size:26px;font-weight:600;font-family:'DM Mono',monospace;line-height:1;}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;}
+.tab{padding:7px 16px;border-radius:20px;border:1px solid var(--border-md);background:transparent;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s;font-family:'DM Sans',sans-serif;}
+.tab:hover{background:var(--surface2);color:var(--text);}
+.tab.active{background:var(--accent);border-color:var(--accent);color:white;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rlg);padding:1.25rem 1.5rem;margin-bottom:1rem;}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;gap:1rem;}
+.card-title{font-size:16px;font-weight:600;}
+.card-meta{font-size:12px;color:var(--text3);margin-top:3px;}
+.badge{display:inline-flex;align-items:center;font-size:12px;font-weight:500;padding:4px 12px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.badge-ok{background:var(--green-bg);color:var(--green);}
+.badge-warn{background:var(--amber-bg);color:var(--amber);}
+.badge-bad{background:var(--red-bg);color:var(--red);}
+.badge-blue{background:var(--blue-bg);color:var(--blue);}
+.progress-track{height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;margin-bottom:.875rem;}
+.progress-fill{height:100%;border-radius:4px;transition:width .4s ease;}
+.stats-row{display:flex;flex-wrap:wrap;gap:12px 24px;font-size:13px;color:var(--text2);margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.stat strong{color:var(--text);font-weight:600;}
+.alert-box{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:1rem;font-weight:500;}
+.alert-ok{background:var(--green-bg);color:var(--green);}
+.alert-warn{background:var(--amber-bg);color:var(--amber);}
+.alert-bad{background:var(--red-bg);color:var(--red);}
+.section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:.625rem;margin-top:1.125rem;}
+.class-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.class-item:last-child{border-bottom:none;}
+.class-date{font-size:12px;font-family:'DM Mono',monospace;color:var(--text2);min-width:48px;}
+.class-weekday{font-size:12px;color:var(--text3);min-width:70px;}
+.class-time{font-size:12px;font-family:'DM Mono',monospace;color:var(--text3);}
+.class-actions{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap;}
+.btn-st{padding:4px 11px;border-radius:7px;border:1px solid var(--border-md);font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--text2);transition:all .12s;font-family:'DM Sans',sans-serif;}
+.btn-st:hover{background:var(--surface2);}
+.btn-st.presente{background:var(--green-bg);color:var(--green);border-color:var(--green);}
+.btn-st.ausente{background:var(--red-bg);color:var(--red);border-color:var(--red);}
+.btn-st.suspendida{background:var(--amber-bg);color:var(--amber);border-color:var(--amber);}
+.future-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.future-item:last-child{border-bottom:none;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0;}
+.parciales-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;}
+.parcial-card{border:1px solid var(--border);border-radius:var(--r);padding:.875rem 1rem;}
+.parcial-num{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);margin-bottom:.375rem;}
+.parcial-date-big{font-size:20px;font-weight:600;font-family:'DM Mono',monospace;line-height:1.2;}
+.parcial-days{font-size:11px;color:var(--text3);margin-top:2px;}
+.parcial-nota{font-size:13px;font-weight:500;margin-top:.375rem;}
+.parcial-nota.ok{color:var(--green);}
+.parcial-nota.mal{color:var(--red);}
+.parcial-inputs{display:flex;gap:6px;margin-top:.625rem;flex-wrap:wrap;}
+.input-sm{padding:5px 9px;border-radius:7px;border:1px solid var(--border-md);font-size:13px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;outline:none;}
+.input-sm:focus{border-color:var(--accent);}
+input[type=date].input-sm,input[type=time].input-sm{font-family:'DM Mono',monospace;}
+.chip{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--blue-bg);color:var(--blue);margin-left:4px;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal{background:var(--surface);border-radius:var(--rlg);padding:1.5rem;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;border:1px solid var(--border-md);}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:1.25rem;}
+.modal-sec{margin-bottom:1.25rem;}
+.modal-sec-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:.625rem;}
+.modal-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
+.modal-row label{font-size:13px;color:var(--text2);min-width:52px;}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;}
+.btn{padding:8px 18px;border-radius:var(--r);border:1px solid var(--border-md);font-size:14px;font-weight:500;cursor:pointer;background:transparent;color:var(--text);transition:all .15s;font-family:'DM Sans',sans-serif;}
+.btn:hover{background:var(--surface2);}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:white;}
+.btn-primary:hover{opacity:.9;}
+.list-item{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.list-item:last-child{border-bottom:none;}
+.icon-btn{background:none;border:none;cursor:pointer;padding:4px 7px;border-radius:6px;color:var(--text3);font-size:13px;transition:all .12s;line-height:1;}
+.icon-btn:hover{background:var(--red-bg);color:var(--red);}
+.restore-btn{background:none;border:1px solid var(--border-md);cursor:pointer;padding:3px 10px;border-radius:7px;color:var(--text2);font-size:12px;font-weight:500;transition:all .12s;}
+.restore-btn:hover{background:var(--green-bg);color:var(--green);border-color:var(--green);}
+.scrollable{max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r);padding:.5rem .75rem;}
+.empty-msg{font-size:13px;color:var(--text3);padding:.375rem 0;}
+footer{text-align:center;font-size:12px;color:var(--text3);margin-top:3rem;padding-bottom:2rem;}
+@media(max-width:520px){
+  .container{padding:1rem;}
+  .card{padding:1rem;}
+  .card-header{flex-direction:column;gap:.5rem;}
+  .class-actions{width:100%;justify-content:flex-end;}
+  .parciales-grid{grid-template-columns:1fr;}
+  .topbar{padding:0 1rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">U</div>
+    <div>
+      <div class="topbar-title">Asistencia UCH</div>
+      <div class="topbar-sub">1° semestre 2026</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span id="today-lbl" style="font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;"></span>
+    <button class="btn" style="font-size:13px;padding:6px 14px;" onclick="openModal()">✎ Editar clases</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="metrics-grid" id="gmetrics"></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="content"></div>
+  <footer>UCH · Presencial · 16/3/26 – 3/7/26 · Meta 75% de asistencia</footer>
+</div>
+
+<div class="overlay" id="overlay" style="display:none" onclick="maybeClose(event)">
+  <div class="modal" id="modal">
+    <div class="modal-title">Editar clases del calendario</div>
+    <div class="modal-sec">
+      <div class="modal-sec-title">Materia</div>
+      <select class="input-sm" id="m-sel" onchange="renderModal()" style="width:100%"></select>
+    </div>
+    <div id="m-body"></div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const S_START = new Date(2026,2,16);
+const S_END   = new Date(2026,6,3);
+const TARGET  = 0.75;
+const DNAMES  = ['','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Dom'];
+const DSHORT  = ['','Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const BASE_F  = new Set(['2026-03-23','2026-03-24','2026-04-02','2026-04-03',
+                         '2026-05-01','2026-05-25','2026-06-15','2026-06-20','2026-07-09']);
+
+const MATS = [
+  {id:'adm', name:'Derecho Administrativo',       short:'D. Administrativo',
+   hs:[{d:1,i:'15:00',f:'18:10'},{d:3,i:'15:00',f:'17:05'},{d:4,i:'15:00',f:'16:00'},{d:5,i:'15:00',f:'16:00'}]},
+  {id:'min', name:'Derecho Minero y Agrario',      short:'D. Minero',
+   hs:[{d:2,i:'18:15',f:'20:20'},{d:4,i:'16:05',f:'17:05'}]},
+  {id:'prv', name:'Derecho Privado Profundizado',  short:'D. Privado',
+   hs:[{d:3,i:'17:10',f:'19:15'},{d:4,i:'17:10',f:'19:15'}]},
+  {id:'int', name:'D. Internacional Público y de la Integración', short:'D. Internacional',
+   hs:[{d:5,i:'16:05',f:'19:15'}]},
+];
+
+function iso(d){return d.toISOString().slice(0,10);}
+function fmt(d){return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'});}
+function fromIso(s){const[y,m,d]=s.split('-');return new Date(+y,+m-1,+d);}
+function daysTo(s){const t=new Date();t.setHours(0,0,0,0);return Math.round((fromIso(s)-t)/864e5);}
+
+let ST={};
+try{ST=JSON.parse(localStorage.getItem('uch26_v3')||'{}');}catch(e){}
+const save=()=>{try{localStorage.setItem('uch26_v3',JSON.stringify(ST));}catch(e){}};
+
+function gp(...p){let o=ST;for(const k of p){if(o==null)return undefined;o=o[k];}return o;}
+function sp(val,...p){
+  let o=ST;
+  for(let i=0;i<p.length-1;i++){if(o[p[i]]==null)o[p[i]]={};o=o[p[i]];}
+  o[p[p.length-1]]=val;save();
+}
+
+const extras  = mid => gp('ex',mid)||[];
+const removed = mid => gp('rm',mid)||[];
+
+function addExtra(mid,date,i,f){
+  const a=extras(mid);
+  if(!a.find(x=>x.date===date)){a.push({date,i,f});sp(a,'ex',mid);}
+}
+function delExtra(mid,date){sp(extras(mid).filter(x=>x.date!==date),'ex',mid);}
+function addRemoved(mid,date){const a=removed(mid);if(!a.includes(date)){a.push(date);sp(a,'rm',mid);}}
+function undoRemoved(mid,date){sp(removed(mid).filter(x=>x!==date),'rm',mid);}
+
+function genClases(m){
+  const rm=new Set(removed(m.id));
+  const cl=[];
+  let d=new Date(S_START);
+  while(d<=S_END){
+    const dow=d.getDay(), s=iso(d);
+    const h=m.hs.find(x=>x.d===dow);
+    if(h&&!BASE_F.has(s)&&!rm.has(s))
+      cl.push({key:m.id+'_'+s,date:new Date(d),dia:DNAMES[dow],i:h.i,f:h.f,extra:false});
+    d.setDate(d.getDate()+1);
+  }
+  extras(m.id).forEach(e=>{
+    if(!cl.find(c=>c.key===m.id+'_'+e.date)){
+      const dt=fromIso(e.date);
+      cl.push({key:m.id+'_'+e.date,date:dt,dia:DNAMES[dt.getDay()],i:e.i,f:e.f,extra:true});
+    }
+  });
+  return cl.sort((a,b)=>a.date-b.date);
+}
+
+function getStatus(key){return gp('st',key)||null;}
+function toggleStatus(key,val){
+  if(getStatus(key)===val)sp(null,'st',key);
+  else sp(val,'st',key);
+  render();
+}
+
+function getParcial(mid,n){return gp('par',mid,'p'+n)||{};}
+function setParcialField(mid,n,field,val){sp(val,'par',mid,'p'+n,field);render();}
+
+function calcStats(m){
+  const cl=genClases(m);
+  const now=new Date();now.setHours(0,0,0,0);
+  const past=cl.filter(c=>c.date<=now);
+  const fut =cl.filter(c=>c.date>now);
+  let pres=0,aus=0,susp=0;
+  past.forEach(c=>{
+    const s=getStatus(c.key);
+    if(s==='presente')pres++;
+    else if(s==='ausente')aus++;
+    else if(s==='suspendida')susp++;
+  });
+  const dict=pres+aus;
+  const pct=dict>0?pres/dict:null;
+  const totNoSusp=cl.length-susp;
+  const need=Math.ceil(totNoSusp*TARGET);
+  const faltan=Math.max(0,need-pres);
+  return{cl,past,fut,pres,aus,susp,dict,pct,total:cl.length,totNoSusp,need,faltan};
+}
+
+function bCls(pct,faltan,futN){
+  if(pct===null)return'badge-warn';
+  if(faltan===0)return'badge-ok';
+  if(faltan>futN)return'badge-bad';
+  return pct>=.75?'badge-ok':'badge-warn';
+}
+function bTxt(pct,faltan,futN){
+  const p=pct!==null?Math.round(pct*100)+'%':'--';
+  if(faltan===0)return p+' · ¡OK!';
+  if(faltan>futN)return p+' · en riesgo';
+  return p+' · faltan '+faltan;
+}
+function fColor(pct){
+  if(pct===null||pct<.6)return'var(--red)';
+  if(pct<.75)return'var(--amber)';
+  return'var(--green)';
+}
+
+let activeTab=MATS[0].id;
+
+function renderGlobal(){
+  let tp=0,td=0;
+  const cards=MATS.map(m=>{
+    const s=calcStats(m);tp+=s.pres;td+=s.dict;
+    const p=s.dict>0?Math.round(s.pres/s.dict*100)+'%':'--';
+    return`<div class="metric-card"><div class="metric-label">${m.short.split(' ').slice(0,2).join(' ')}</div><div class="metric-value">${p}</div><div class="metric-sub">${s.pres} de ${s.total} clases</div></div>`;
+  });
+  const gp2=td>0?Math.round(tp/td*100)+'%':'--';
+  cards.push(`<div class="metric-card" style="border-color:var(--accent);border-width:1.5px"><div class="metric-label">Global</div><div class="metric-value" style="color:var(--accent)">${gp2}</div><div class="metric-sub">${tp} presencias totales</div></div>`);
+  document.getElementById('gmetrics').innerHTML=cards.join('');
+}
+
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=MATS.map(m=>
+    `<button class="tab ${activeTab===m.id?'active':''}" onclick="setTab('${m.id}')">${m.short}</button>`
+  ).join('');
+}
+
+function renderParcialesSection(m){
+  const cards=[1,2].map(n=>{
+    const p=getParcial(m.id,n);
+    let dateHtml='<div class="empty-msg">Sin fecha cargada</div>';
+    let daysHtml='', notaHtml='', badgeHtml='';
+
+    if(p.date){
+      const days=daysTo(p.date);
+      dateHtml=`<div class="parcial-date-big">${fmt(fromIso(p.date))}</div>`;
+      if(p.nota!==undefined&&p.nota!==''){
+        const nv=parseFloat(p.nota);
+        const ok=nv>=4;
+        notaHtml=`<div class="parcial-nota ${ok?'ok':'mal'}">Nota: ${p.nota} · ${ok?'Aprobado':'Desaprobado'}</div>`;
+        badgeHtml=`<span class="badge ${ok?'badge-ok':'badge-bad'}" style="font-size:11px;padding:2px 9px">${ok?'Aprobado':'Desaprobado'}</span>`;
+      } else {
+        const dStr=days>0?`en ${days} día${days!==1?'s':''}`:days===0?'¡hoy!':days===-1?'ayer':`hace ${Math.abs(days)} días`;
+        daysHtml=`<div class="parcial-days">${dStr}</div>`;
+        badgeHtml=`<span class="badge badge-blue" style="font-size:11px;padding:2px 9px">${days>0?'próximo':days===0?'hoy':'sin nota'}</span>`;
+      }
+    }
+
+    return`<div class="parcial-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.375rem">
+        <div class="parcial-num">${n}° Parcial</div>
+        ${badgeHtml}
+      </div>
+      ${dateHtml}${daysHtml}${notaHtml}
+      <div class="parcial-inputs">
+        <input type="date" class="input-sm" value="${p.date||''}" min="2026-03-16" max="2026-07-03"
+          onchange="setParcialField('${m.id}',${n},'date',this.value)" style="flex:1;min-width:0" title="Fecha del parcial">
+        <input type="number" class="input-sm" value="${p.nota||''}" placeholder="nota" min="1" max="10" step="0.5"
+          onchange="setParcialField('${m.id}',${n},'nota',this.value)" style="width:70px" title="Nota obtenida">
+      </div>
+    </div>`;
+  });
+  return`<div class="parciales-grid">${cards.join('')}</div>`;
+}
+
+function renderContent(){
+  const m=MATS.find(x=>x.id===activeTab);
+  const s=calcStats(m);
+  const pctNum=s.dict>0?s.pres/s.dict:0;
+  const pctPx=Math.min(100,Math.round(pctNum*100));
+
+  let alert='';
+  if(s.faltan===0){
+    alert=`<div class="alert-box alert-ok">✓ Ya alcanzaste el 75%. Podés faltar ${s.fut.length} clase${s.fut.length!==1?'s':''} más.</div>`;
+  } else if(s.faltan>s.fut.length){
+    alert=`<div class="alert-box alert-bad">⚠ No alcanzás el 75% aunque vayas a todas las clases restantes.</div>`;
+  } else {
+    alert=`<div class="alert-box alert-warn">→ Tenés que ir a las próximas <strong>${s.faltan}</strong> clase${s.faltan!==1?'s':''} para llegar al 75%.</div>`;
+  }
+
+  const pasadas=[...s.past].reverse();
+  let pasHtml=`<div class="section-label">Clases pasadas</div>`;
+  if(pasadas.length){
+    pasHtml+=pasadas.map(c=>{
+      const st=getStatus(c.key);
+      return`<div class="class-item">
+        <span class="class-date">${fmt(c.date)}</span>
+        <span class="class-weekday">${c.dia}${c.extra?'<span class="chip">extra</span>':''}</span>
+        <span class="class-time">${c.i}</span>
+        <div class="class-actions">
+          <button class="btn-st ${st==='presente'?'presente':''}" onclick="toggleStatus('${c.key}','presente')">Presente</button>
+          <button class="btn-st ${st==='ausente'?'ausente':''}" onclick="toggleStatus('${c.key}','ausente')">Ausente</button>
+          <button class="btn-st ${st==='suspendida'?'suspendida':''}" onclick="toggleStatus('${c.key}','suspendida')">Suspendida</button>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    pasHtml+=`<p class="empty-msg">El cursado aún no comenzó.</p>`;
+  }
+
+  const prox=s.fut.slice(0,10);
+  let futHtml='';
+  if(prox.length){
+    futHtml=`<div class="section-label" style="margin-top:1.25rem">Próximas clases</div>`+
+      prox.map(c=>`<div class="future-item">
+        <div class="dot"></div>
+        <span style="font-size:12px;font-family:'DM Mono',monospace;color:var(--text2)">${fmt(c.date)}</span>
+        <span style="font-size:12px;color:var(--text3)">${c.dia}${c.extra?'<span class="chip">extra</span>':''}</span>
+        <span style="font-size:12px;font-family:'DM Mono',monospace;color:var(--text3)">${c.i}–${c.f}</span>
+      </div>`).join('');
+  }
+
+  document.getElementById('content').innerHTML=`
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">${m.name}</div>
+          <div class="card-meta">${m.hs.map(h=>DSHORT[h.d]+' '+h.i+'–'+h.f).join(' · ')}</div>
+        </div>
+        <span class="badge ${bCls(s.pct,s.faltan,s.fut.length)}">${bTxt(s.pct,s.faltan,s.fut.length)}</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pctPx}%;background:${fColor(s.pct)}"></div></div>
+      <div class="stats-row">
+        <div class="stat">Presentes <strong>${s.pres}</strong></div>
+        <div class="stat">Ausentes <strong>${s.aus}</strong></div>
+        <div class="stat">Suspendidas <strong>${s.susp}</strong></div>
+        <div class="stat">Total <strong>${s.total}</strong></div>
+        <div class="stat">Necesito <strong>${s.need}</strong></div>
+        <div class="stat">Faltan <strong style="color:${s.faltan>s.fut.length?'var(--red)':'inherit'}">${s.faltan}</strong></div>
+      </div>
+      ${alert}
+      <div class="section-label" style="margin-top:.25rem">Parciales</div>
+      ${renderParcialesSection(m)}
+      ${pasHtml}
+      ${futHtml}
+    </div>`;
+}
+
+function setTab(id){activeTab=id;render();}
+function render(){renderGlobal();renderTabs();renderContent();}
+
+/* ---- MODAL ---- */
+function openModal(){
+  const sel=document.getElementById('m-sel');
+  sel.innerHTML=MATS.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+  sel.value=activeTab;
+  renderModal();
+  document.getElementById('overlay').style.display='flex';
+}
+function closeModal(){document.getElementById('overlay').style.display='none';render();}
+function maybeClose(e){if(e.target===document.getElementById('overlay'))closeModal();}
+
+function renderModal(){
+  const mid=document.getElementById('m-sel').value;
+  const m=MATS.find(x=>x.id===mid);
+  const rm=new Set(removed(mid));
+  const ex=extras(mid);
+
+  // Build base class list
+  const base=[];
+  let d=new Date(S_START);
+  while(d<=S_END){
+    const dow=d.getDay(), s=iso(d);
+    const h=m.hs.find(x=>x.d===dow);
+    if(h&&!BASE_F.has(s)) base.push({s,label:fmt(new Date(d))+' '+DNAMES[dow]+' '+h.i,rm:rm.has(s)});
+    d.setDate(d.getDate()+1);
+  }
+  const active=base.filter(x=>!x.rm);
+  const cancelled=base.filter(x=>x.rm);
+
+  let html=`
+  <div class="modal-sec">
+    <div class="modal-sec-title">Agregar clase extra</div>
+    <div class="modal-row">
+      <label>Fecha</label>
+      <input type="date" class="input-sm" id="ex-date" min="2026-03-16" max="2026-07-03">
+    </div>
+    <div class="modal-row">
+      <label>Inicio</label>
+      <input type="time" class="input-sm" id="ex-i" value="15:00">
+      <label style="min-width:auto">Fin</label>
+      <input type="time" class="input-sm" id="ex-f" value="17:00">
+    </div>
+    <button class="btn btn-primary" onclick="doAdd('${mid}')" style="width:100%;margin-top:4px">+ Agregar clase extra</button>
+  </div>`;
+
+  if(ex.length){
+    html+=`<div class="modal-sec"><div class="modal-sec-title">Clases extra</div><div class="scrollable">`;
+    ex.forEach(e=>{
+      const dt=fromIso(e.date);
+      html+=`<div class="list-item"><span>${fmt(dt)} ${DNAMES[dt.getDay()]} <span class="chip">extra</span> ${e.i}–${e.f}</span><button class="icon-btn" onclick="doDelExtra('${mid}','${e.date}')">✕</button></div>`;
+    });
+    html+=`</div></div>`;
+  }
+
+  html+=`<div class="modal-sec">
+    <div class="modal-sec-title">Cancelar clase (feriado / suspensión)</div>`;
+  if(active.length){
+    html+=`<div class="scrollable">`;
+    active.forEach(c=>{
+      html+=`<div class="list-item"><span style="font-size:13px">${c.label}</span><button class="btn-st" style="font-size:11px;padding:3px 9px" onclick="doCancel('${mid}','${c.s}')">Cancelar</button></div>`;
+    });
+    html+=`</div>`;
+  } else {
+    html+=`<p class="empty-msg">No hay clases activas.</p>`;
+  }
+  html+=`</div>`;
+
+  if(cancelled.length){
+    html+=`<div class="modal-sec"><div class="modal-sec-title">Clases canceladas — restaurar</div><div class="scrollable">`;
+    cancelled.forEach(c=>{
+      html+=`<div class="list-item"><span style="font-size:13px;color:var(--text3)">${c.label}</span><button class="restore-btn" onclick="doRestore('${mid}','${c.s}')">Restaurar</button></div>`;
+    });
+    html+=`</div></div>`;
+  }
+
+  document.getElementById('m-body').innerHTML=html;
+}
+
+function doAdd(mid){
+  const date=document.getElementById('ex-date').value;
+  const i=document.getElementById('ex-i').value;
+  const f=document.getElementById('ex-f').value;
+  if(!date){alert('Seleccioná una fecha.');return;}
+  addExtra(mid,date,i,f);renderModal();
+}
+function doDelExtra(mid,date){delExtra(mid,date);renderModal();}
+function doCancel(mid,date){addRemoved(mid,date);renderModal();}
+function doRestore(mid,date){undoRemoved(mid,date);renderModal();}
+
+document.getElementById('today-lbl').textContent=new Date().toLocaleDateString('es-AR',{weekday:'short',day:'2-digit',month:'2-digit'});
+render();
+</script>
+</body>
+</html>
