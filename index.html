@@ -129,6 +129,7 @@ input[type=date].input-sm,input[type=time].input-sm{font-family:'DM Mono',monosp
 .icon-btn:hover{background:var(--red-bg);color:var(--red);}
 .restore-btn{background:none;border:1px solid var(--border-md);cursor:pointer;padding:3px 10px;border-radius:7px;color:var(--text2);font-size:12px;font-weight:500;transition:all .12s;}
 .restore-btn:hover{background:var(--green-bg);color:var(--green);border-color:var(--green);}
+.hor-row{display:flex;align-items:center;gap:8px;background:var(--surface2);padding:7px 10px;border-radius:var(--r);flex-wrap:wrap;}
 .scrollable{max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r);padding:.5rem .75rem;}
 .empty-msg{font-size:13px;color:var(--text3);padding:.375rem 0;}
 footer{text-align:center;font-size:12px;color:var(--text3);margin-top:3rem;padding-bottom:2rem;}
@@ -352,6 +353,55 @@ function renderParcialesSection(m){
   return`<div class="parciales-grid">${cards.join('')}</div>`;
 }
 
+function renderHorariosEditor(m){
+  const dOpts=sel=>[1,2,3,4,5,6].map(v=>`<option value="${v}"${v===sel?' selected':''}>${DNAMES[v]}</option>`).join('');
+  const rows=m.hs.map((h,i)=>`
+    <div class="hor-row">
+      <select class="input-sm hor-d" data-mid="${m.id}" data-idx="${i}" onchange="saveHorarioInline('${m.id}',${i})" style="width:108px">${dOpts(h.d)}</select>
+      <input type="time" class="input-sm hor-i" data-mid="${m.id}" data-idx="${i}" value="${h.i}" onchange="saveHorarioInline('${m.id}',${i})" style="width:86px">
+      <span style="font-size:12px;color:var(--text3);flex-shrink:0">–</span>
+      <input type="time" class="input-sm hor-f" data-mid="${m.id}" data-idx="${i}" value="${h.f}" onchange="saveHorarioInline('${m.id}',${i})" style="width:86px">
+      <button class="icon-btn" onclick="delHorarioInline('${m.id}',${i})" title="Eliminar">✕</button>
+    </div>`).join('');
+  return`<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:.75rem">
+    ${rows}
+    <div class="hor-row" style="opacity:.65">
+      <select class="input-sm" id="nh-d-${m.id}" style="width:108px">${dOpts(1)}</select>
+      <input type="time" class="input-sm" id="nh-i-${m.id}" value="15:00" style="width:86px">
+      <span style="font-size:12px;color:var(--text3);flex-shrink:0">–</span>
+      <input type="time" class="input-sm" id="nh-f-${m.id}" value="17:00" style="width:86px">
+      <button class="btn-st" onclick="addHorarioInline('${m.id}')" style="font-size:11px;padding:3px 10px;white-space:nowrap">+ Agregar</button>
+    </div>
+  </div>`;
+}
+
+function saveHorarioInline(mid,idx){
+  const m=MATS.find(x=>x.id===mid);
+  const dEl=document.querySelector(`.hor-d[data-mid="${mid}"][data-idx="${idx}"]`);
+  const iEl=document.querySelector(`.hor-i[data-mid="${mid}"][data-idx="${idx}"]`);
+  const fEl=document.querySelector(`.hor-f[data-mid="${mid}"][data-idx="${idx}"]`);
+  if(dEl&&iEl&&fEl){m.hs[idx]={d:parseInt(dEl.value),i:iEl.value,f:fEl.value};}
+  render();
+}
+
+function delHorarioInline(mid,idx){
+  const m=MATS.find(x=>x.id===mid);
+  if(m.hs.length<=1){alert('La materia debe tener al menos un horario.');return;}
+  m.hs.splice(idx,1);
+  render();
+}
+
+function addHorarioInline(mid){
+  const m=MATS.find(x=>x.id===mid);
+  const d=parseInt(document.getElementById('nh-d-'+mid).value);
+  const i=document.getElementById('nh-i-'+mid).value;
+  const f=document.getElementById('nh-f-'+mid).value;
+  if(m.hs.find(h=>h.d===d)){alert('Ya hay un horario para ese día. Editalo arriba.');return;}
+  m.hs.push({d,i,f});
+  m.hs.sort((a,b)=>a.d-b.d);
+  render();
+}
+
 function renderContent(){
   const m=MATS.find(x=>x.id===activeTab);
   const s=calcStats(m);
@@ -420,6 +470,8 @@ function renderContent(){
       ${alert}
       <div class="section-label" style="margin-top:.25rem">Parciales</div>
       ${renderParcialesSection(m)}
+      <div class="section-label" style="margin-top:1.125rem">Horarios regulares</div>
+      ${renderHorariosEditor(m)}
       ${pasHtml}
       ${futHtml}
     </div>`;
