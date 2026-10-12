@@ -1,0 +1,29 @@
+{
+  "efectivo_usdc": 1917.66,
+  "posiciones": [
+    {"ticker": "VOO",  "nombre": "Vanguard S&P 500 ETF", "cantidad": 0.9538, "costo_usd": 674.00},
+    {"ticker": "GOOG", "nombre": "Alphabet",             "cantidad": 1.0290, "costo_usd": 366.79},
+    {"ticker": "VIST", "nombre": "Vista Energy (NO es VST Vistra)", "cantidad": 4.0019, "costo_usd": 274.53},
+    {"ticker": "LNG",  "nombre": "Cheniere Energy",      "cantidad": 0.7989, "costo_usd": 222.41}
+  ],
+  "reglas": {
+    "umbral_dia_pct": 5,
+    "LNG":  {"precio_objetivo": 290, "vender_usd": 110,
+             "nota": "Si no llega a $290 se mantiene hasta el anuncio del S&P 500 (~11 de diciembre)"},
+    "VIST": {"primera_en_salir": true, "nota": "Sin objetivo. Primera en salir cuando haga falta plata; ⚠️ si está en verde"},
+    "GOOG": {"palabras_clave_noticias": ["Brinkema", "ad tech", "AdX"],
+             "nota": "No se agrega a ningún precio"}
+  },
+  "watchlist": ["MU", "P", "ADBE", "NVO", "ARES", "DHI", "LLY", "UBER", "NVDA", "NU", "QQQ", "IGV", "BTC-USD"],
+  "watchlist_desde": "2026-10-19",
+  "tarjeta": {"monto_usd": 2199, "fecha": "2026-10-19"},
+  "mercado": [
+    {"ticker": "ES=F",    "nombre": "Futuros S&P 500"},
+    {"ticker": "NQ=F",    "nombre": "Futuros Nasdaq 100"},
+    {"ticker": "CL=F",    "nombre": "Petróleo WTI"},
+    {"ticker": "BZ=F",    "nombre": "Petróleo Brent"},
+    {"ticker": "^TNX",    "nombre": "Bono 10 años (%)"},
+    {"ticker": "^VIX",    "nombre": "VIX"},
+    {"ticker": "BTC-USD", "nombre": "Bitcoin"}
+  ]
+}
